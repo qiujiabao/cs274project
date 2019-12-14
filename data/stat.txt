@@ -1,0 +1,3 @@
+max btwness: 2796969.125648559
+min btwness: 2.0
+avg btwness: 682.5359158600969
