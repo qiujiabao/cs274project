@@ -79,9 +79,9 @@ def main():
                     input.append(btwness)
                     count = count + 1
             inputs[index] = input
-        # Don't keep iterating if all inputs are processed
-        if count == len(inputs):
-            break
+            # Don't keep iterating if all inputs are processed
+            if count == len(inputs):
+                break
     file.close()
 
     for input in inputs:
@@ -92,18 +92,24 @@ def main():
         # if top class is 'bully'
         if 'bully' in class_name:
             normalized_confidence = (confidence-min_confidence)/(max_confidence-min_confidence)
-            btwness = input[3]
-            print(f'{confidence}, {normalized_confidence}, {btwness}')
-            if normalized_confidence > .8:
-                if btwness > avg_btwness: # need a better threshold
-                    # larger btwness means less significant network
-                    print(input[2] + "prob. FP")
-                else:
+            if len(input) != 4:
+                # This means their is no betweenness data appended in the previous step
+                # So the edge does not exist, they are strangers, it is purely bullying
+                if normalized_confidence > .9:
                     print(input[2] + "bully")
-            elif normalized_confidence > .5:
-                if btwness < avg_btwness: # need a better threshold
-                    # smaller btwness means more significant network
-                    print(input[2] + "prob. FN")
+            else:
+                btwness = input[3]
+                print(f'{confidence}, {normalized_confidence}, {btwness}')
+                if normalized_confidence > .9:
+                    if btwness > avg_btwness: # need a better threshold
+                        # larger btwness means less significant network
+                        print(input[2] + "prob. FP")
+                    else:
+                        print(input[2] + "bully")
+                elif normalized_confidence > .5:
+                    if btwness < avg_btwness: # need a better threshold
+                        # smaller btwness means more significant network
+                        print(input[2] + "prob. FN")
 
 if __name__ == '__main__':
     main()
